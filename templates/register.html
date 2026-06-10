@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="form-container">
+    <h2>用户注册</h2>
+    
+    {% if error %}
+    <div class="error-message">
+        {{ error }}
+    </div>
+    {% endif %}
+    
+    <form method="POST" action="/register">
+        <div class="form-group">
+            <label for="username">用户名</label>
+            <input type="text" id="username" name="username" placeholder="请输入3-20个字符的用户名" required>
+            <small class="form-tip">用户名长度：3-20个字符</small>
+        </div>
+        <div class="form-group">
+            <label for="password">密码</label>
+            <input type="password" id="password" name="password" placeholder="请输入6-20个字符的密码" required>
+            <small class="form-tip">密码长度：6-20个字符</small>
+        </div>
+        <div class="form-group">
+            <label for="confirm_password">确认密码</label>
+            <input type="password" id="confirm_password" name="confirm_password" placeholder="请再次输入密码" required>
+        </div>
+        <button type="submit" class="submit-btn register-btn">立即注册</button>
+        <p class="form-link">
+            已有账号？<a href="/login">立即登录</a>
+        </p>
+    </form>
+</div>
+{% endblock %}

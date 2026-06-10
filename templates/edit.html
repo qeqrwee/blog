@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="form-container">
+    <h2>编辑博客</h2>
+    <form method="POST" action="/edit/{{ blog.id }}" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="title">博客标题</label>
+            <input type="text" id="title" name="title" value="{{ blog.title }}" required>
+        </div>
+        <div class="form-group">
+            <label for="cover">博客封面图</label>
+            {% if blog.cover %}
+            <div class="current-cover">
+                <p>当前封面：</p>
+                <img src="{{ url_for('static', filename='uploads/' + blog.cover) }}" alt="当前封面" style="max-width: 200px; margin: 10px 0;">
+            </div>
+            {% endif %}
+            <input type="file" id="cover" name="cover" accept="image/*">
+            <small class="form-tip">不选择文件则保留原有封面</small>
+        </div>
+        <div class="form-group">
+            <label for="content">博客内容</label>
+            <textarea id="content" name="content" rows="10" required>{{ blog.content }}</textarea>
+        </div>
+        <div class="form-group">
+            <label for="category_id">博客分类</label>
+            <select id="category_id" name="category_id" class="form-select">
+                <option value="0">未分类</option>
+                {% for category in categories %}
+                    <option value="{{ category.id }}" {% if blog.category_id == category.id %}selected{% endif %}>{{ category.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="submit-btn">保存修改</button>
+        <a href="/" class="edit-btn index">返回首页</a>
+    </form>
+</div>
+{% endblock %}

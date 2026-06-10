@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="detail-container">
+    {% if blog.cover %}
+    <div class="detail-cover">
+        <img src="{{ url_for('static', filename='uploads/' + blog.cover) }}" alt="{{ blog.title }}">
+    </div>
+    {% endif %}
+    <h1 class="detail-title">{{ blog.title }}</h1>
+    <p class="detail-time">
+        发布时间：{{ blog.create_time }}
+        {% if blog.update_time %}
+            最后更新：{{ blog.update_time }}
+        {% endif %}
+    </p>
+    <div class="detail-actions">
+        {% if session.user %}
+            <a href="/edit/{{ blog.id }}" class="edit-btn">编辑博客</a>
+            <a href="/delete/{{ blog.id }}" class="edit-btn del" onclick="return confirm('确定要删除吗？')">删除博客</a>
+        {% endif %}
+        <a href="/" class="edit-btn index">返回首页</a>
+    </div>
+    <div class="detail-content">
+        {{ blog.content }}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="form-container">
+    <h2>分类管理</h2>
+    <form method="POST" action="/categories" class="add-category-form">
+        <div class="form-group">
+            <label for="name">新增分类</label>
+            <input type="text" id="name" name="name" placeholder="输入分类名称" required>
+        </div>
+        <button type="submit" class="submit-btn">添加分类</button>
+    </form>
+    <div class="category-list">
+        <h3>已有分类</h3>
+        {% for category in categories %}
+        <div class="category-item">
+            <span>{{ category.name }}</span>
+            <a href="/delete_category/{{ category.id }}" class="delete-btn small" onclick="return confirm('确定删除该分类吗？')">删除</a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

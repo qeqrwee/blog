@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="cate-filter">
+    <span class="cate-label">分类筛选：</span>
+    <a href="/" class="cate-btn {% if selected_cate == '' %}active{% endif %}">全部</a>
+    {% for cate in categories %}
+    <a href="?cate_id={{ cate.id }}" class="cate-btn {% if selected_cate == cate.id %}active{% endif %}">
+        {{ cate.name }}
+    </a>
+    {% endfor %}
+</div>
+
+<div class="blog-list">
+    {% for blog in blogs %}
+    <div class="blog-card">
+        {% if blog.cover %}
+        <div class="blog-cover">
+            <img src="{{ url_for('static', filename='uploads/' + blog.cover) }}" alt="{{ blog.title }}">
+        </div>
+        {% endif %}
+        <span class="blog-cate-tag">{{ blog.category_name }}</span>
+        <h2><a href="/blog/{{ blog.id }}">{{ blog.title }}</a></h2>
+        <p class="time">发布时间：{{ blog.create_time }}</p>
+        <p class="summary">{{ blog.content[:100] }}...</p>
+        <div class="blog-actions">
+            {% if session.user %}
+                <a href="/edit/{{ blog.id }}" class="small-btn">编辑</a>
+                <a href="/delete/{{ blog.id }}" class="small-btn delete" onclick="return confirm('确定要删除吗？')">删除</a>
+            {% endif %}
+        </div>
+    </div>
+    {% else %}
+    <p class="empty-tip">该分类下暂无博客</p>
+    {% endfor %}
+</div>
+{% endblock %}

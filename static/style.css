@@ -1,0 +1,461 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Microsoft Yahei", sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background: #f5f5f5;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* 导航栏样式 */
+header {
+    background: #2c3e50;
+    color: white;
+    padding: 1rem;
+}
+
+.nav {
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav h1 a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.5rem;
+}
+
+.nav-btn {
+    background: #3498db;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+}
+
+.nav-btn:hover {
+    background: #2980b9;
+}
+
+/* 博客列表样式 */
+.blog-card {
+    background: white;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.blog-card h2 a {
+    color: #2c3e50;
+    text-decoration: none;
+    font-size: 1.5rem;
+}
+
+.time {
+    color: #7f8c8d;
+    font-size: 0.9rem;
+    margin: 5px 0;
+}
+
+.summary {
+    color: #555;
+    margin-top: 10px;
+}
+
+/* 表单样式 */
+.form-container {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.form-container h2 {
+    margin-bottom: 20px;
+    color: #2c3e50;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.form-group input, .form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-family: inherit;
+}
+
+.form-group input:focus, .form-group textarea:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+.submit-btn {
+    background: #2c3e50;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.submit-btn:hover {
+    background: #34495e;
+}
+
+.submit-btn:active {
+    transform: translateY(1px);
+}
+
+
+/*详情页样式*/
+.detail-container {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.detail-title {
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+.detail-time {
+    color: #7f8c8d;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.detail-content {
+    line-height: 1.8;
+    font-size: 1.1rem;
+    white-space: pre-wrap;
+}
+
+/* 页脚样式 */
+footer {
+    text-align: center;
+    padding: 20px;
+    color: #7f8c8d;
+    margin-top: 40px;
+}
+.detail-actions {
+    margin-bottom: 20px;
+}
+
+.edit-btn {
+    background: #f39c12;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+}
+
+.edit-btn.del{
+    background: red;
+}
+
+.edit-btn.index{
+    background: #3498db;
+}
+
+.edit-btn:hover {
+    background: #e67e22;
+}
+
+.delete-btn {
+    background: #e74c3c;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    margin-left: 10px;
+}
+
+.delete-btn:hover {
+    background: #c0392b;
+}
+
+.small-btn {
+    padding: 4px 8px;
+    border-radius: 4px;
+    text-decoration: none;
+    color: white;
+    font-size: 0.9rem;
+    margin-right: 10px;
+}
+
+.small-btn.delete {
+    background: #e74c3c;
+}
+
+.small-btn:not(.delete) {
+    background: #f39c12;
+}
+
+.blog-actions {
+    margin-top: 15px;
+}
+
+.error-message {
+    background: #fdecea;
+    color: #e74c3c;
+    padding: 12px 16px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    border-left: 4px solid #e74c3c;
+}
+/* 表单提示文字 */
+.form-tip {
+    color: #7f8c8d;
+    font-size: 0.85rem;
+    margin-top: 5px;
+    display: block;
+}
+/* 注册按钮 */
+.register-btn {
+    background: #27ae60;
+    width: 100%;
+}
+.register-btn:hover {
+    background: #229954;
+}
+/* 表单链接 */
+.form-link {
+    text-align: center;
+    margin-top: 20px;
+    color: #7f8c8d;
+}
+.form-link a {
+    color: #3498db;
+    text-decoration: none;
+}
+.form-link a:hover {
+    text-decoration: underline;
+}
+/* 导航栏注册按钮 */
+.nav-btn.register {
+    background: #27ae60;
+    margin-left: 10px;
+}
+.nav-btn.register:hover {
+    background: #229954;
+}
+.nav-btn.login {
+    background: #9b59b6;
+    margin-left: 10px;
+}
+.nav-btn.login:hover {
+    background: #8e44ad;
+}
+.nav-btn.logout{
+    background: red;
+}
+.nav-btn.cate-manage{
+    background:#16a085;
+    margin-left:10px;
+}
+.nav-btn.cate-manage:hover{
+    background:#138d75;
+}
+
+/* 文件上传样式 */
+input[type="file"] {
+    padding: 8px 0;
+    border: none;
+}
+.current-cover {
+    background: #f8f9fa;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+.current-cover img {
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* 封面图样式 */
+.blog-cover {
+    margin-bottom: 15px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+.blog-cover img {
+    width: 100%;
+    height: auto;
+    max-height: 400px;
+    object-fit: cover;
+    display: block;
+}
+.detail-cover {
+    margin-bottom: 20px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+.detail-cover img {
+    width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+    display: block;
+}
+
+/* 分类管理样式 */
+.add-category-form {
+    display: flex;
+    gap: 10px;
+    align-items: end;
+    margin-bottom: 30px;
+}
+.add-category-form .form-group {
+    flex: 1;
+    margin-bottom: 0;
+}
+.category-list {
+    margin-top: 30px;
+}
+.category-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background: #f8f9fa;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+.category-tag {
+    background: #3498db;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+}
+select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-family: inherit;
+}
+
+.cate-filter {
+    background: #fff;
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.cate-label {
+    color: #666;
+    font-weight: 500;
+    margin-right: 5px;
+}
+.cate-btn {
+    padding: 6px 14px;
+    border: 1px solid #e0e0e0;
+    border-radius: 20px;
+    font-size: 14px;
+    color: #666;
+    transition: all 0.2s;
+    text-decoration: none;
+}
+.cate-btn:hover {
+    border-color: #3498db;
+    color: #3498db;
+}
+.cate-btn.active {
+    background: #3498db;
+    color: #fff;
+    border-color: #3498db;
+}
+.cate-btn.add-btn {
+    background: #27ae60;
+    color: #fff;
+    border-color: #27ae60;
+    margin-left: 10px;
+}
+.cate-btn.add-btn:hover {
+    background: #219653;
+}
+.blog-cate-tag {
+    display: inline-block;
+    background: #3498db;
+    color: #fff;
+    font-size: 12px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+.add-category-form {
+    display: flex;
+    gap: 10px;
+    align-items: end;
+    margin-bottom: 30px;
+}
+.add-category-form .form-group {
+    flex: 1;
+    margin-bottom: 0;
+}
+.category-list {
+    margin-top: 30px;
+}
+.category-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background: #f8f9fa;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+.delete-btn.small {
+    padding: 4px 8px;
+    font-size: 0.85rem;
+}
+.form-select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-family: inherit;
+}
+.empty-tip {
+    text-align: center;
+    color: #999;
+    padding: 40px 0;
+    background: white;
+    border-radius: 8px;
+}
