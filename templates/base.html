@@ -9,6 +9,10 @@
     <header>
         <div class="nav">
             <h1><a href="/">我的博客</a></h1>
+            <form class="search-form" action="/search" method="GET">
+                 <input type="text" name="keyword" placeholder="搜索博客..." value="{{ keyword }}">
+                <button type="submit" class="search-btn">搜索</button>
+            </form>
             <div class="nav-links">
                 {% if session.user %}
                     <a href="/add" class="nav-btn">发布博客</a>

@@ -1,4 +1,4 @@
-from tool import blog_sl,user_sl,cate_sln,upload
+from tool import sl_upload
 from flask import Flask,render_template,request,url_for,redirect,session
 from datetime import datetime,timedelta
 from werkzeug.utils import secure_filename
@@ -7,33 +7,33 @@ import os
 app = Flask(__name__)
 app.config.update(
     PERMANENT_SESSION_LIFETIME = timedelta(days=7),
-    UPLOAD_FOLDER = upload.UPLOAD_FOLDER,
+    UPLOAD_FOLDER = sl_upload.UPLOAD_FOLDER,
     SECRET_KEY = 'key'
 )
 
 @app.route('/')
 def index():
-    all_blogs = blog_sl.load_blogs()
-    all_categories = cate_sln.load_categories()
+    all_blogs = sl_upload.load_blogs()
+    all_categories = sl_upload.load_categories()
     select_cate_id = request.args.get('cate_id')
     show_blog = all_blogs
     if select_cate_id and select_cate_id.isdigit():
         select_cate_id = int(select_cate_id)
         show_blog = [blog for blog in all_blogs if blog.get('category_id',0) == select_cate_id]
     for blog in show_blog:
-        blog['category_name'] = cate_sln.get_category_name(blog.get('category_id',0))
+        blog['category_name'] = sl_upload.get_category_name(blog.get('category_id',0))
     return render_template('index.html',blogs = show_blog,categories = all_categories,selected_cate = select_cate_id)
 
 @app.route('/categories', methods=['GET', 'POST'])
 def categories():
     if request.method == 'GET':
-        categories = cate_sln.load_categories()
+        categories = sl_upload.load_categories()
         return render_template('categories.html', categories=categories)
     else:
         category_name = request.form.get('name', '').strip()
         if not category_name:
             return redirect(url_for('categories'))
-        categories = cate_sln.load_categories()
+        categories = sl_upload.load_categories()
         existing = next((c for c in categories if c['name'] == category_name), None)
         if existing:
             return redirect(url_for('categories'))
@@ -42,19 +42,19 @@ def categories():
             'name': category_name
         }
         categories.append(new_category)
-        cate_sln.save_categories(categories)
+        sl_upload.save_categories(categories)
         return redirect(url_for('categories'))
 
 @app.route('/delete_category/<int:category_id>')
 def delete_category(category_id):
-    categories = cate_sln.load_categories()
+    categories = sl_upload.load_categories()
     categories = [c for c in categories if c['id'] != category_id]
-    cate_sln.save_categories(categories)
-    blogs = blog_sl.load_blogs()
+    sl_upload.save_categories(categories)
+    blogs = sl_upload.load_blogs()
     for blog in blogs:
         if blog.get('category_id') == category_id:
             blog['category_id'] = None
-    blog_sl.save_blogs(blogs)
+    sl_upload.save_blogs(blogs)
 
     return redirect(url_for('categories'))
 
@@ -63,7 +63,7 @@ def register():
     if request.method == 'GET':
         return render_template('register.html')
     else:
-        users = user_sl.load_users()
+        users = sl_upload.load_users()
         new_id = max([u['id'] for u in users], default=0) + 1
         username = request.form['username']
         password = request.form['password']
@@ -86,7 +86,7 @@ def register():
             "register_time": register_time
         }
         users.append(new_user)
-        user_sl.save_users(users)
+        sl_upload.save_users(users)
         return redirect(url_for('index'))
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -96,7 +96,7 @@ def login():
     else:
         username = request.form['username']
         password = request.form['password']
-        users = user_sl.load_users()
+        users = sl_upload.load_users()
         for u in users:
             if u["username"] == username:
                 if u['password'] == password:
@@ -115,7 +115,7 @@ def logout():
 @app.route('/add', methods=['GET', 'POST'])
 def add_blog():
     if request.method == "GET":
-        categorie = cate_sln.load_categories()
+        categorie = sl_upload.load_categories()
         return render_template("add.html",categories=categorie)
     else:
         title = request.form["title"]
@@ -124,12 +124,12 @@ def add_blog():
         cover_filename = None
         if 'cover' in request.files:
             file = request.files['cover']
-            if file and file.filename != '' and upload.allowed_file(file.filename):
+            if file and file.filename != '' and sl_upload.allowed_file(file.filename):
                 filename = secure_filename(file.filename)
                 timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
                 cover_filename = f"{timestamp}_{filename}"
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], cover_filename))
-        blogs = blog_sl.load_blogs()
+        blogs = sl_upload.load_blogs()
         new_id = max([blog['id'] for blog in blogs], default=0) + 1
         new_time = datetime.now().strftime("%Y-%m-%d-%H")
         new_blog = {
@@ -142,25 +142,43 @@ def add_blog():
             "create_time": new_time
         }
         blogs.append(new_blog)
-        blog_sl.save_blogs(blogs)
+        sl_upload.save_blogs(blogs)
         return redirect(url_for("index"))
 
 @app.route('/blog/<int:blog_id>')
 def blog_detail(blog_id):
-    blogs = blog_sl.load_blogs()
-    for i in blogs:
-        if i["id"] == blog_id:
-            return render_template('detail.html',blog=i)
-    return "博客不存在",404
+    blogs = sl_upload.load_blogs()
+    blog = next((b for b in blogs if b['id'] == blog_id), None)
+    if not blog:
+        return "博客不存在", 404
+    comments = sl_upload.load_comments()
+    blog_comments = [c for c in comments if c['blog_id'] == blog_id]
+    return render_template('detail.html', blog=blog, comments=blog_comments)
+
+@app.route('/search')
+def search():
+    keyword = request.args.get('keyword', '').strip()
+    blogs = sl_upload.load_blogs()
+    categories = sl_upload.load_categories()
+    if keyword:
+        show_blogs = []
+        for blog in blogs:
+            if keyword.lower() in blog['title'].lower() or keyword.lower() in blog['content'].lower():
+                show_blogs.append(blog)
+    for blog in show_blogs:
+        for category in categories:
+            if blog.get('category_id') == category["id"]:
+                blog['category_name'] = category["name"]
+    return render_template('search.html', blogs=show_blogs, keyword=keyword)
 
 @app.route('/edit/<int:blog_id>', methods=['GET', 'POST'])
 def edit_blog(blog_id):
-    blogs = blog_sl.load_blogs()
+    blogs = sl_upload.load_blogs()
     blog = next((b for b in blogs if b['id'] == blog_id), None)
     if not blog:
         return "博客不存在",404
     if request.method == "GET":
-        categories = cate_sln.load_categories()
+        categories = sl_upload.load_categories()
         return render_template("edit.html",blog=blog,categories=categories)
     else:
         blog["title"] = request.form['title']
@@ -169,7 +187,7 @@ def edit_blog(blog_id):
         blog['category_id'] = int(request.form.get('category_id')) if request.form.get('category_id') else None
         if 'cover' in request.files:
             file = request.files['cover']
-            if file and file.filename != '' and upload.allowed_file(file.filename):
+            if file and file.filename != '' and sl_upload.allowed_file(file.filename):
                 if blog.get('cover'):
                     old_cover_path = os.path.join(app.config['UPLOAD_FOLDER'], blog['cover'])
                     if os.path.exists(old_cover_path):
@@ -179,17 +197,43 @@ def edit_blog(blog_id):
                 cover_filename = f"{timestamp}_{filename}"
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], cover_filename))
                 blog['cover'] = cover_filename
-        blog_sl.save_blogs(blogs)
+        sl_upload.save_blogs(blogs)
         return redirect(url_for("blog_detail",blog_id=blog_id))
 
 @app.route('/delete/<int:blog_id>')
 def delete_blog(blog_id):
-    blogs = blog_sl.load_blogs()
+    blogs = sl_upload.load_blogs()
     for i in blogs:
         if i["id"] == blog_id:
             blogs.remove(i)
-    blog_sl.save_blogs(blogs)
+    sl_upload.save_blogs(blogs)
     return redirect(url_for("index",blog_id=blog_id))
 
+@app.route('/comment/<int:blog_id>', methods=['POST'])
+def add_comment(blog_id):
+    comment = request.form.get('content','').strip()
+    if not comment:
+        return redirect(url_for('blog_detail',blog_id=blog_id))
+    comments = sl_upload.load_comments()
+    new_comment = {
+        "id":max([c['id'] for c in comments], default=0) + 1,
+        'blog_id':blog_id,
+        "username":session['user'],
+        "content": comment,
+        "date":datetime.now().strftime('%Y-%m-%d %H:%M')
+    }
+    comments.append(new_comment)
+    sl_upload.save_comments(comments)
+    return redirect(url_for('blog_detail',blog_id=blog_id))
+
+@app.route('/delete_comment/<int:comment_id>')
+def delete_comment(comment_id):
+    comments = sl_upload.load_comments()
+    comme = next((c for c in comments if c['id'] == comment_id),None)
+    if comme and session["user"] == comme["username"] :
+        new_comme = [c for c in comments if c['id'] != comment_id]
+        sl_upload.save_comments(new_comme)
+    return redirect(url_for("blog_detail",blog_id=comme['blog_id'] if comme else 0))
+
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()

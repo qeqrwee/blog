@@ -24,5 +24,32 @@
     <div class="detail-content">
         {{ blog.content }}
     </div>
+    <div class="comment-section">
+        <h3>评论 ({{ comments|length }})</h3>
+        {% if session.user %}
+        <form class="comment-form" method="POST" action="/comment/{{ blog.id }}">
+            <div class="form-group">
+                <textarea name="content" rows="3" placeholder="发表你的评论..." required></textarea>
+            </div>
+            <button type="submit" class="submit-btn">发表评论</button>
+        </form>
+        {% else %}
+        <p class="comment-tip">请<a href="/login">登录</a>后发表评论</p>
+        {% endif %}
+        <div class="comment-list">
+            {% for comment in comments %}
+            <div class="comment-item">
+                <div class="comment-header">
+                    <span class="comment-user">{{ comment.username }}</span>
+                    <span class="comment-time">{{ comment.create_time }}</span>
+                    {% if session.user %}
+                        <a href="/delete_comment/{{ comment.id }}" class="delete-comment" onclick="return confirm('确定删除这条评论吗？')">删除</a>
+                    {% endif %}
+                </div>
+                <div class="comment-content">{{ comment.content }}</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
 </div>
 {% endblock %}

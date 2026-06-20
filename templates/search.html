@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="search-result">
+    <h2>搜索结果
+        {% if keyword %}
+        <small>："{{ keyword }}"</small>
+        {% endif %}
+    </h2>
+    <p class="result-count">共找到 {{ blogs|length }} 篇相关博客</p>
+    
+    {% if not blogs %}
+    <div class="empty-state">
+        <p>没有找到相关博客，换个关键词试试吧~</p>
+    </div>
+    {% endif %}
+    
+    {% for blog in blogs %}
+    <div class="blog-card">
+        {% if blog.cover %}
+        <div class="blog-cover">
+            <img src="{{ url_for('static', filename='uploads/' + blog.cover) }}" alt="{{ blog.title }}">
+        </div>
+        {% endif %}
+        <h2><a href="/blog/{{ blog.id }}">{{ blog.title }}</a></h2>
+        <p class="time">
+            发布时间：{{ blog.create_time }}
+            {% if blog.category_name %}
+            | 分类：<span class="category-tag">{{ blog.category_name }}</span>
+            {% endif %}
+        </p>
+        <p class="summary">{{ blog.content[:150] }}...</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
